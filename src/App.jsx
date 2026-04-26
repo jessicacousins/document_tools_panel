@@ -29,10 +29,10 @@ import ToolsPanel, { CATEGORIES, TOOL_REGISTRY } from "./tools.jsx";
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const NAV = [
-  { id: "editor",  label: "Editor",  icon: FileEdit },
-  { id: "tools",   label: "Tools",   icon: Layers3 },
+  { id: "editor", label: "Editor", icon: FileEdit },
+  { id: "tools", label: "Tools", icon: Layers3 },
   { id: "builder", label: "Builder", icon: FilePlus2 },
-  { id: "brand",   label: "Brand",   icon: Palette },
+  { id: "brand", label: "Brand", icon: Palette },
 ];
 
 export default function App() {
@@ -61,11 +61,46 @@ export default function App() {
       },
     }));
     const navItems = [
-      { id: "open-editor",  title: "Open the editor",                  description: "Edit, sign, and annotate the loaded PDF.",        icon: FileEdit,  category: "Workspace", run: () => setActivePanel("editor") },
-      { id: "open-tools",   title: "Browse all tools",                 description: "Categorized PDF tools: organize, convert, …",     icon: Layers3,   category: "Workspace", run: () => setActivePanel("tools") },
-      { id: "open-builder", title: "Open the PDF builder",             description: "Design a styled PDF from scratch.",               icon: FilePlus2, category: "Workspace", run: () => setActivePanel("builder") },
-      { id: "open-brand",   title: "Open brand identity",              description: "Set company name, logo, colors, and signatures.", icon: Palette,   category: "Workspace", run: () => setActivePanel("brand") },
-      { id: "open-pdf",     title: "Open a PDF…",                      description: "Pick a file from your device.",                    icon: UploadCloud, category: "Workspace", run: () => fileInputRef.current?.click() },
+      {
+        id: "open-editor",
+        title: "Open the editor",
+        description: "Edit, sign, and annotate the loaded PDF.",
+        icon: FileEdit,
+        category: "Workspace",
+        run: () => setActivePanel("editor"),
+      },
+      {
+        id: "open-tools",
+        title: "Browse all tools",
+        description: "Categorized PDF tools: organize, convert, …",
+        icon: Layers3,
+        category: "Workspace",
+        run: () => setActivePanel("tools"),
+      },
+      {
+        id: "open-builder",
+        title: "Open the PDF builder",
+        description: "Design a styled PDF from scratch.",
+        icon: FilePlus2,
+        category: "Workspace",
+        run: () => setActivePanel("builder"),
+      },
+      {
+        id: "open-brand",
+        title: "Open brand identity",
+        description: "Set company name, logo, colors, and signatures.",
+        icon: Palette,
+        category: "Workspace",
+        run: () => setActivePanel("brand"),
+      },
+      {
+        id: "open-pdf",
+        title: "Open a PDF…",
+        description: "Pick a file from your device.",
+        icon: UploadCloud,
+        category: "Workspace",
+        run: () => fileInputRef.current?.click(),
+      },
     ];
     return [...navItems, ...toolItems];
   }, []);
@@ -98,7 +133,10 @@ export default function App() {
     event.preventDefault();
     setDragOver(false);
     const file = event.dataTransfer.files?.[0];
-    if (file?.type === "application/pdf" || file?.name?.toLowerCase().endsWith(".pdf")) {
+    if (
+      file?.type === "application/pdf" ||
+      file?.name?.toLowerCase().endsWith(".pdf")
+    ) {
       setPdfFile(file);
       setActivePanel("editor");
     } else if (file) {
@@ -114,17 +152,32 @@ export default function App() {
   return (
     <div
       className={`appShell ${dragOver ? "dragOver" : ""}`}
-      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-      onDragLeave={(e) => { if (e.currentTarget === e.target) setDragOver(false); }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragOver(true);
+      }}
+      onDragLeave={(e) => {
+        if (e.currentTarget === e.target) setDragOver(false);
+      }}
       onDrop={onDrop}
     >
-      <input ref={fileInputRef} type="file" accept="application/pdf" onChange={onPickPdf} hidden />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf"
+        onChange={onPickPdf}
+        hidden
+      />
 
       {/* Top bar */}
       <header className="appBar">
         <div className="brandBlock">
           <div className="brandLogo">
-            {brandStore.brand.logo ? <img src={brandStore.brand.logo.src} alt="" /> : <PrismMark size={22} />}
+            {brandStore.brand.logo ? (
+              <img src={brandStore.brand.logo.src} alt="" />
+            ) : (
+              <PrismMark size={22} />
+            )}
           </div>
           <div className="brandName">
             <strong>{brandStore.brand.companyName || "JC PDF Studio"}</strong>
@@ -149,14 +202,21 @@ export default function App() {
 
         <div className="appBarSpacer" />
 
-        <button className="searchTrigger" onClick={() => setPaletteOpen(true)} aria-label="Search tools (Ctrl+K)">
+        <button
+          className="searchTrigger"
+          onClick={() => setPaletteOpen(true)}
+          aria-label="Search tools (Ctrl+K)"
+        >
           <Search size={15} />
           <span>Search every tool…</span>
           <kbd>⌘K</kbd>
         </button>
 
         <div className="appBarActions">
-          <button className="btn btn-ghost" onClick={() => fileInputRef.current?.click()}>
+          <button
+            className="btn btn-ghost"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <UploadCloud size={14} /> Open PDF
           </button>
         </div>
@@ -164,9 +224,23 @@ export default function App() {
 
       {/* Privacy ribbon */}
       <div className="ribbon">
-        <span className="pill"><Sparkles size={12} /> Free forever</span>
+        <span className="pill">
+          <Sparkles size={12} /> Free forever
+        </span>
         <strong>Files never leave your device.</strong>
-        <span>No accounts, no analytics, no paywalls. <button onClick={() => setLegalOpen(true)} style={{ color: "var(--teal)", textDecoration: "underline", padding: 0 }}>Privacy details</button></span>
+        <span>
+          No accounts, no analytics, no paywalls.{" "}
+          <button
+            onClick={() => setLegalOpen(true)}
+            style={{
+              color: "var(--teal)",
+              textDecoration: "underline",
+              padding: 0,
+            }}
+          >
+            Privacy details
+          </button>
+        </span>
       </div>
 
       {/* Main content */}
@@ -218,18 +292,34 @@ export default function App() {
       />
 
       {legalOpen && (
-        <div className="modalShell" role="dialog" aria-modal="true" aria-label="Privacy and legal">
+        <div
+          className="modalShell"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Privacy and legal"
+        >
           <div className="modalCard">
             <div className="modalTitleRow">
               <div>
                 <p className="eyebrow">Legal & Privacy</p>
-                <h2>How PrismPDF handles your files</h2>
+                <h2>How JC PDF Studio handles your files</h2>
               </div>
-              <button className="btn-icon" onClick={() => setLegalOpen(false)} aria-label="Close"><X size={18} /></button>
+              <button
+                className="btn-icon"
+                onClick={() => setLegalOpen(false)}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
             </div>
             <LegalPanel />
             <div className="modalActions">
-              <button className="btn btn-brand" onClick={() => setLegalOpen(false)}>Got it</button>
+              <button
+                className="btn btn-brand"
+                onClick={() => setLegalOpen(false)}
+              >
+                Got it
+              </button>
             </div>
           </div>
         </div>
@@ -247,7 +337,15 @@ export default function App() {
 // ============================================================ Brand identity page
 
 function BrandPage({ brandStore, setStatus }) {
-  const { brand, update, setLogo, addSignature, removeSignature, setDefaultSignature, reset } = brandStore;
+  const {
+    brand,
+    update,
+    setLogo,
+    addSignature,
+    removeSignature,
+    setDefaultSignature,
+    reset,
+  } = brandStore;
   const [showSignature, setShowSignature] = useState(false);
   const logoInputRef = useRef(null);
 
@@ -265,7 +363,13 @@ function BrandPage({ brandStore, setStatus }) {
 
   return (
     <main className="brandPage">
-      <input ref={logoInputRef} type="file" accept="image/png,image/jpeg,image/jpg" hidden onChange={onLogoChange} />
+      <input
+        ref={logoInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/jpg"
+        hidden
+        onChange={onLogoChange}
+      />
       {showSignature && (
         <SignaturePad
           onCancel={() => setShowSignature(false)}
@@ -279,57 +383,117 @@ function BrandPage({ brandStore, setStatus }) {
 
       <div style={{ maxWidth: 920, margin: "0 auto 24px" }}>
         <p className="eyebrow">Brand Identity</p>
-        <h1 style={{ fontSize: "1.6rem", marginTop: 4 }}>Save your brand once, reuse it everywhere</h1>
+        <h1 style={{ fontSize: "1.6rem", marginTop: 4 }}>
+          Save your brand once, reuse it everywhere
+        </h1>
         <p style={{ color: "var(--muted)", marginTop: 6, maxWidth: 620 }}>
-          The logo, colors, and signatures you save here are stored only in this browser and are
-          automatically applied across the editor, builder, invoices, watermarks, and more.
+          The logo, colors, and signatures you save here are stored only in this
+          browser and are automatically applied across the editor, builder,
+          invoices, watermarks, and more.
         </p>
       </div>
 
       <div className="brandLayout">
         <section className="card elevated">
           <div className="cardHead">
-            <div className="cardIcon"><Palette size={18} /></div>
-            <div className="cardTitle"><h3>Company &amp; colors</h3><p>Shown on invoices, headers, and the app bar.</p></div>
+            <div className="cardIcon">
+              <Palette size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>Company &amp; colors</h3>
+              <p>Shown on invoices, headers, and the app bar.</p>
+            </div>
           </div>
           <label className="field">
             <span>Company name</span>
-            <input value={brand.companyName} onChange={(e) => update({ companyName: e.target.value })} placeholder="Your company or your name" />
+            <input
+              value={brand.companyName}
+              onChange={(e) => update({ companyName: e.target.value })}
+              placeholder="Your company or your name"
+            />
           </label>
           <label className="field">
             <span>Contact line</span>
-            <input value={brand.contactLine} onChange={(e) => update({ contactLine: e.target.value })} placeholder="hello@example.com  ·  example.com  ·  555-555-5555" />
+            <input
+              value={brand.contactLine}
+              onChange={(e) => update({ contactLine: e.target.value })}
+              placeholder="hello@example.com  ·  example.com  ·  555-555-5555"
+            />
           </label>
           <div className="fieldRow">
             <label className="field">
               <span>Primary color</span>
-              <input type="color" value={brand.primaryColor} onChange={(e) => update({ primaryColor: e.target.value })} />
+              <input
+                type="color"
+                value={brand.primaryColor}
+                onChange={(e) => update({ primaryColor: e.target.value })}
+              />
             </label>
             <label className="field">
               <span>Accent color</span>
-              <input type="color" value={brand.accentColor} onChange={(e) => update({ accentColor: e.target.value })} />
+              <input
+                type="color"
+                value={brand.accentColor}
+                onChange={(e) => update({ accentColor: e.target.value })}
+              />
             </label>
           </div>
-          <div style={{ display: "flex", gap: 12, marginTop: 4, alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              marginTop: 4,
+              alignItems: "center",
+            }}
+          >
             <span className="miniText">Preview:</span>
-            <div style={{ flex: 1, height: 32, borderRadius: 9, background: `linear-gradient(135deg, ${brand.primaryColor}, ${brand.accentColor})` }} />
+            <div
+              style={{
+                flex: 1,
+                height: 32,
+                borderRadius: 9,
+                background: `linear-gradient(135deg, ${brand.primaryColor}, ${brand.accentColor})`,
+              }}
+            />
           </div>
         </section>
 
         <section className="card elevated">
           <div className="cardHead">
-            <div className="cardIcon purple"><UploadCloud size={18} /></div>
-            <div className="cardTitle"><h3>Logo</h3><p>Used in the app bar and on every generator that includes a header.</p></div>
+            <div className="cardIcon purple">
+              <UploadCloud size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>Logo</h3>
+              <p>
+                Used in the app bar and on every generator that includes a
+                header.
+              </p>
+            </div>
           </div>
           <div className="logoPreview">
-            {brand.logo ? <img src={brand.logo.src} alt={brand.logo.name || "Brand logo"} /> : <span>No logo yet — PNG or JPG looks best</span>}
+            {brand.logo ? (
+              <img src={brand.logo.src} alt={brand.logo.name || "Brand logo"} />
+            ) : (
+              <span>No logo yet — PNG or JPG looks best</span>
+            )}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <button className="btn btn-soft" onClick={() => logoInputRef.current?.click()}>
-              <UploadCloud size={14} /> {brand.logo ? "Replace logo" : "Upload logo"}
+            <button
+              className="btn btn-soft"
+              onClick={() => logoInputRef.current?.click()}
+            >
+              <UploadCloud size={14} />{" "}
+              {brand.logo ? "Replace logo" : "Upload logo"}
             </button>
             {brand.logo && (
-              <button className="btn btn-danger" onClick={() => { update({ logo: null }); setStatus("Logo cleared."); }}>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  update({ logo: null });
+                  setStatus("Logo cleared.");
+                }}
+              >
                 <Trash2 size={14} /> Remove
               </button>
             )}
@@ -338,10 +502,15 @@ function BrandPage({ brandStore, setStatus }) {
 
         <section className="card elevated" style={{ gridColumn: "1 / -1" }}>
           <div className="cardHead">
-            <div className="cardIcon"><PenLine size={18} /></div>
+            <div className="cardIcon">
+              <PenLine size={18} />
+            </div>
             <div className="cardTitle">
               <h3>Saved signatures</h3>
-              <p>Your default signature auto-fills the Builder and is one tap away inside the Editor.</p>
+              <p>
+                Your default signature auto-fills the Builder and is one tap
+                away inside the Editor.
+              </p>
             </div>
           </div>
           {brand.signatures.length === 0 ? (
@@ -349,37 +518,82 @@ function BrandPage({ brandStore, setStatus }) {
           ) : (
             <div className="signatureList">
               {brand.signatures.map((sig) => (
-                <div key={sig.id} className={`signatureRow ${sig.isDefault ? "default" : ""}`}>
+                <div
+                  key={sig.id}
+                  className={`signatureRow ${sig.isDefault ? "default" : ""}`}
+                >
                   <img src={sig.src} alt={sig.label} />
                   <div className="sigMeta">
                     <strong>{sig.label}</strong>
-                    {sig.isDefault && <span style={{ color: "var(--teal)" }}>Default for new documents</span>}
+                    {sig.isDefault && (
+                      <span style={{ color: "var(--teal)" }}>
+                        Default for new documents
+                      </span>
+                    )}
                   </div>
                   {sig.isDefault ? (
                     <span className="defaultBadge">DEFAULT</span>
                   ) : (
-                    <button className="btn btn-soft btn-sm" onClick={() => setDefaultSignature(sig.id)}>Make default</button>
+                    <button
+                      className="btn btn-soft btn-sm"
+                      onClick={() => setDefaultSignature(sig.id)}
+                    >
+                      Make default
+                    </button>
                   )}
-                  <button className="btn btn-danger btn-sm" onClick={() => removeSignature(sig.id)} aria-label="Remove signature"><Trash2 size={13} /></button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => removeSignature(sig.id)}
+                    aria-label="Remove signature"
+                  >
+                    <Trash2 size={13} />
+                  </button>
                 </div>
               ))}
             </div>
           )}
-          <button className="btn btn-brand" onClick={() => setShowSignature(true)} style={{ alignSelf: "flex-start" }}>
+          <button
+            className="btn btn-brand"
+            onClick={() => setShowSignature(true)}
+            style={{ alignSelf: "flex-start" }}
+          >
             <PenLine size={14} /> Draw a signature
           </button>
         </section>
 
-        <section className="card" style={{ gridColumn: "1 / -1", borderColor: "rgba(244, 63, 94, 0.25)" }}>
+        <section
+          className="card"
+          style={{
+            gridColumn: "1 / -1",
+            borderColor: "rgba(244, 63, 94, 0.25)",
+          }}
+        >
           <div className="cardHead">
-            <div className="cardIcon" style={{ background: "rgba(244, 63, 94, 0.1)", color: "var(--rose)" }}><Trash2 size={18} /></div>
-            <div className="cardTitle"><h3>Reset brand identity</h3><p>Clear everything saved in this browser. There is no cloud copy.</p></div>
+            <div
+              className="cardIcon"
+              style={{
+                background: "rgba(244, 63, 94, 0.1)",
+                color: "var(--rose)",
+              }}
+            >
+              <Trash2 size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>Reset brand identity</h3>
+              <p>
+                Clear everything saved in this browser. There is no cloud copy.
+              </p>
+            </div>
           </div>
           <button
             className="btn btn-danger"
             style={{ alignSelf: "flex-start" }}
             onClick={() => {
-              if (window.confirm("Reset all brand identity in this browser? This cannot be undone.")) {
+              if (
+                window.confirm(
+                  "Reset all brand identity in this browser? This cannot be undone.",
+                )
+              ) {
                 reset();
                 setStatus("Brand identity cleared.");
               }
