@@ -1,0 +1,16 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">PrismPDF Studio logo</title>
+  <desc id="desc">A teal and purple folded document mark.</desc>
+  <rect width="240" height="240" rx="56" fill="url(#paint0_linear)"/>
+  <path d="M72 52h66l42 42v94H72V52Z" fill="white" fill-opacity="0.95"/>
+  <path d="M138 52v42h42" fill="#C4B5FD"/>
+  <path d="M92 122h72M92 146h58M92 170h42" stroke="#0F766E" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="178" cy="178" r="30" fill="#7C3AED"/>
+  <path d="m164 179 9 9 20-23" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="22" y1="18" x2="219" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14B8A6"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+</svg>

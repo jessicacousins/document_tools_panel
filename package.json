@@ -1,0 +1,28 @@
+{
+  "name": "teal-purple-pdf-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A browser-local PDF editor built with Vite, React, PDF.js, and pdf-lib.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test:smoke": "playwright test"
+  },
+  "dependencies": {
+    "docx": "^9.6.1",
+    "jszip": "^3.10.1",
+    "lucide-react": "latest",
+    "pdf-lib": "latest",
+    "pdfjs-dist": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest"
+  }
+}

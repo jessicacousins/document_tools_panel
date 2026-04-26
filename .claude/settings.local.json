@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(npx vite *)",
+      "Bash(PW_CHANNEL=msedge npx playwright test --reporter=line)",
+      "Bash(PW_CHANNEL=msedge npx playwright test tests/smoke.spec.js -g \"Builder|Editor: loads\" --reporter=line)",
+      "Bash(PW_CHANNEL=msedge npx playwright test tests/smoke.spec.js -g \"Editor: loads\" --reporter=line)"
+    ]
+  }
+}
