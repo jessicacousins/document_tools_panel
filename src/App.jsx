@@ -127,7 +127,7 @@ export default function App() {
             {brandStore.brand.logo ? <img src={brandStore.brand.logo.src} alt="" /> : <PrismMark size={22} />}
           </div>
           <div className="brandName">
-            <strong>{brandStore.brand.companyName || "PrismPDF Studio"}</strong>
+            <strong>{brandStore.brand.companyName || "JC PDF Studio"}</strong>
             <span>Browser-local PDF studio</span>
           </div>
         </div>

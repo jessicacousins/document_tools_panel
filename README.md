@@ -1,4 +1,4 @@
-# PrismPDF Studio
+# JC PDF Studio
 
 A free, professional PDF studio that runs entirely in your browser. No accounts, no uploads, no paywall.
 

@@ -854,8 +854,8 @@ function MetadataCard({ brand, setStatus }) {
     const pdfDoc = await PDFDocument.load(await file.arrayBuffer(), { ignoreEncryption: true });
     if (title) pdfDoc.setTitle(normalizePdfText(title));
     if (author) pdfDoc.setAuthor(normalizePdfText(author));
-    pdfDoc.setProducer("PrismPDF Studio");
-    pdfDoc.setCreator("PrismPDF Studio");
+    pdfDoc.setProducer("JC PDF Studio");
+    pdfDoc.setCreator("JC PDF Studio");
     pdfDoc.setModificationDate(new Date());
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-metadata.pdf`);
