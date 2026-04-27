@@ -5,7 +5,14 @@
       "Bash(npx vite *)",
       "Bash(PW_CHANNEL=msedge npx playwright test --reporter=line)",
       "Bash(PW_CHANNEL=msedge npx playwright test tests/smoke.spec.js -g \"Builder|Editor: loads\" --reporter=line)",
-      "Bash(PW_CHANNEL=msedge npx playwright test tests/smoke.spec.js -g \"Editor: loads\" --reporter=line)"
+      "Bash(PW_CHANNEL=msedge npx playwright test tests/smoke.spec.js -g \"Editor: loads\" --reporter=line)",
+      "WebFetch(domain:doc-tool.netlify.app)",
+      "Bash(ls node_modules/qrcode)",
+      "Bash(ls node_modules/marked)",
+      "Bash(npx playwright *)",
+      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --grep \"App boots|Command palette|Brand page|Organize: merge|Generate: invoice|Builder|Editor: loads\" --reporter=line --workers=1)",
+      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --grep \"Images:|Text & Data|Quick:|Business Docs:\" --reporter=line --workers=1)",
+      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --reporter=line --workers=1)"
     ]
   }
 }

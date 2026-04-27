@@ -7,7 +7,6 @@ import { degrees, PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import {
   ArrowDownToLine,
   Brush,
-  CheckCircle2,
   ClipboardList,
   Eraser,
   FileArchive,
@@ -30,9 +29,15 @@ import {
   Trash2,
 } from "lucide-react";
 import {
+  UTILITY_CATEGORIES,
+  UTILITY_CATEGORY_TOOLS,
+  UTILITY_TOOL_REGISTRY,
+} from "./utilities.jsx";
+import {
   DropZone,
   PAGE_PRESETS,
   Spinner,
+  ToolHeader,
   canvasToBlob,
   clamp,
   dataUrlToUint8Array,
@@ -46,6 +51,7 @@ import {
   readFileAsDataUrl,
   renderPdfPageToCanvas,
   safeBaseName,
+  withWorking,
   wrapText,
 } from "./lib.jsx";
 
@@ -55,6 +61,7 @@ export const CATEGORIES = [
   { id: "generate", label: "Generate", icon: FilePlus2, blurb: "Make invoices, table reports, and styled documents from scratch." },
   { id: "protect",  label: "Protect & Polish", icon: ShieldCheck, blurb: "Redact, watermark, number, brand, and finish your documents." },
   { id: "read",     label: "Read & Search", icon: FileSearch, blurb: "Pull text out of scans and find what's inside your PDFs." },
+  ...UTILITY_CATEGORIES,
 ];
 
 // Tool meta — used by the command palette
@@ -77,27 +84,8 @@ export const TOOL_REGISTRY = [
   { id: "metadata",    title: "Edit metadata",             description: "Set title, author, and producer on the PDF.", icon: FileText, category: "Protect & Polish", keywords: ["title", "author"] },
   { id: "search",      title: "Search & highlight report", description: "Find text across pages and download a snippet report.", icon: Search, category: "Read & Search", keywords: ["find", "highlight"] },
   { id: "ocr",         title: "OCR — make searchable",     description: "Recognize text in scanned PDFs and add a searchable layer.", icon: ScanLine, category: "Read & Search", keywords: ["scan", "tesseract"] },
+  ...UTILITY_TOOL_REGISTRY,
 ];
-
-// Each tool returns a card. setStatus(message, kind?) handles toasts.
-function withWorking(action, setLocal) {
-  return async () => {
-    setLocal?.(true);
-    try { await action(); } finally { setLocal?.(false); }
-  };
-}
-
-function ToolHeader({ icon: Icon, title, description }) {
-  return (
-    <div className="cardHead">
-      <div className="cardIcon"><Icon size={18} /></div>
-      <div className="cardTitle">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    </div>
-  );
-}
 
 // ============================================================ Organize tools
 
@@ -124,7 +112,7 @@ function MergeCard({ setStatus }) {
     const bytes = await output.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), "merged.pdf");
     setStatus(`Merged ${files.length} files (${total} pages).`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="merge">
@@ -154,7 +142,7 @@ function SplitCard({ setStatus }) {
     const bytes = await output.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-pages.pdf`);
     setStatus(`Extracted ${selected.length} page${selected.length === 1 ? "" : "s"}.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="split">
@@ -184,7 +172,7 @@ function OrganizeCard({ setStatus }) {
     const bytes = await output.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-reordered.pdf`);
     setStatus(`Reordered to ${selected.length} page${selected.length === 1 ? "" : "s"}.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="organize">
@@ -216,7 +204,7 @@ function RotateCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-rotated.pdf`);
     setStatus("Rotated PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="rotate">
@@ -254,7 +242,7 @@ function CompressCard({ setStatus }) {
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-optimized.pdf`);
     const delta = ((before - after) / before) * 100;
     setStatus(`Saved — ${delta >= 0 ? `${delta.toFixed(1)}% smaller` : `${Math.abs(delta).toFixed(1)}% larger (already optimized)`}.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="compress">
@@ -302,7 +290,7 @@ function ImagesToPdfCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `images-${files.length}-pages.pdf`);
     setStatus(`Converted ${files.length} image${files.length === 1 ? "" : "s"} to PDF.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="img2pdf">
@@ -343,7 +331,7 @@ function PdfToPngCard({ setStatus }) {
     const zipped = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipped, `${safeBaseName(file.name)}-pages.zip`);
     setStatus(`Exported ${selected.length} PNG${selected.length === 1 ? "" : "s"}.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="pdf2png">
@@ -376,7 +364,7 @@ function PdfToDocxCard({ setStatus }) {
     const blob = await Packer.toBlob(doc);
     downloadBlob(blob, `${safeBaseName(file.name)}.docx`);
     setStatus("DOCX downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="pdf2docx">
@@ -422,7 +410,7 @@ function TextToPdfCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(title || "document")}.pdf`);
     setStatus("PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="text2pdf">
@@ -540,7 +528,7 @@ function InvoiceCard({ brand, setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(invoiceNumber || "invoice")}.pdf`);
     setStatus("Invoice downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="invoice" style={{ gridColumn: "span 2" }}>
@@ -633,7 +621,7 @@ function CsvCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(title || "table-report")}.pdf`);
     setStatus("Report PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="csv">
@@ -685,7 +673,7 @@ function RedactCard({ setStatus }) {
     const bytes = await output.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-redacted.pdf`);
     setStatus("Redacted PDF downloaded — output is image-only by design.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="redact">
@@ -732,7 +720,7 @@ function WatermarkCard({ brand, setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-watermarked.pdf`);
     setStatus("Watermarked PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="watermark">
@@ -785,7 +773,7 @@ function HeaderFooterCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-header-footer.pdf`);
     setStatus("Header/footer PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="headfoot">
@@ -825,7 +813,7 @@ function BatesCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-bates.pdf`);
     setStatus("Bates-numbered PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="bates">
@@ -860,7 +848,7 @@ function MetadataCard({ brand, setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-metadata.pdf`);
     setStatus("Metadata-updated PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="metadata">
@@ -911,7 +899,7 @@ function SearchCard({ setStatus }) {
     const bytes = await pdfDoc.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-search-report.pdf`);
     setStatus(`Found ${matches.length} matching page${matches.length === 1 ? "" : "s"}.`, "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="search">
@@ -961,7 +949,7 @@ function OcrCard({ setStatus }) {
     const bytes = await output.save({ useObjectStreams: true });
     downloadBlob(new Blob([bytes], { type: "application/pdf" }), `${safeBaseName(file.name)}-searchable.pdf`);
     setStatus("Searchable OCR PDF downloaded.", "success");
-  }, setBusy);
+  }, setBusy, setStatus);
 
   return (
     <div className="toolCard" data-tool="ocr">
@@ -1020,6 +1008,7 @@ const CATEGORY_TOOLS = {
       <OcrCard setStatus={setStatus} />
     </>
   ),
+  ...UTILITY_CATEGORY_TOOLS,
 };
 
 export default function ToolsPanel({ brand, setStatus, focusToolId, onFocusHandled }) {

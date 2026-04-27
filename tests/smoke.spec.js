@@ -254,6 +254,105 @@ test("Builder: exports a designed PDF from defaults", async ({ page }) => {
   await expectDownload(page, () => page.getByRole("button", { name: /download designed pdf/i }).click(), ".pdf");
 });
 
+// ============================================================ Images & Media
+
+test("Images: compress, convert, resize, favicon all download", async ({ page }) => {
+  const png = await createPng("util-pixel.png");
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Images");
+
+  const compress = toolCard(page, "img-compress");
+  await compress.locator('input[type="file"]').setInputFiles(png);
+  await expectDownload(page, () => compress.getByRole("button", { name: /compress.*download/i }).click(), ".jpg");
+
+  const convert = toolCard(page, "img-convert");
+  await convert.locator('input[type="file"]').setInputFiles(png);
+  await expectDownload(page, () => convert.getByRole("button", { name: /convert.*download/i }).click(), ".png");
+
+  const resize = toolCard(page, "img-resize");
+  await resize.locator('input[type="file"]').setInputFiles(png);
+  // Wait for the original to load so the width input populates
+  await expect(resize.getByText(/Original:/)).toBeVisible({ timeout: 5000 });
+  await expectDownload(page, () => resize.getByRole("button", { name: /resize.*download/i }).click(), ".png");
+
+  const favicon = toolCard(page, "favicon");
+  await favicon.locator('input[type="file"]').setInputFiles(png);
+  await expectDownload(page, () => favicon.getByRole("button", { name: /generate favicon zip/i }).click(), ".zip");
+});
+
+// ============================================================ Text & Data
+
+test("Text & Data: JSON, base64, hash, JWT all respond", async ({ page }) => {
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Text & Data");
+
+  // JSON formatter
+  const json = toolCard(page, "json");
+  await json.locator("textarea").first().fill('{"hi":"world"}');
+  await json.getByRole("button", { name: /^Format$/ }).click();
+  await expect(json.locator("textarea").nth(1)).toHaveValue(/"hi": "world"/, { timeout: 3000 });
+
+  // Base64 encode
+  const b64 = toolCard(page, "base64");
+  await b64.locator("textarea").first().fill("hello world");
+  await b64.getByRole("button", { name: /^Encode$/ }).click();
+  await expect(b64.locator("textarea").last()).toHaveValue(/aGVsbG8gd29ybGQ=/);
+
+  // Hash text
+  const hash = toolCard(page, "hash");
+  await hash.locator("textarea").first().fill("abc");
+  await hash.getByRole("button", { name: /hash text/i }).click();
+  await expect(hash.locator("textarea").last()).toHaveValue(/ba7816bf8f01cfea/);
+
+  // JWT decode
+  const jwt = toolCard(page, "jwt");
+  // standard public test JWT (HS256, payload {"sub":"1234567890","name":"John Doe","iat":1516239022})
+  await jwt.locator("textarea").first().fill("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+  await jwt.getByRole("button", { name: /^Decode$/ }).click();
+  await expect(jwt.locator("textarea").nth(1)).toHaveValue(/HS256/);
+});
+
+// ============================================================ Quick Tools
+
+test("Quick: password and UUID generators produce output", async ({ page }) => {
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Quick Tools");
+
+  const pwd = toolCard(page, "password");
+  await pwd.getByRole("button", { name: /^Generate$/ }).click();
+  await expect(pwd.locator(".codeOut")).toBeVisible();
+
+  const uuid = toolCard(page, "uuid");
+  await uuid.getByRole("button", { name: /^Generate$/ }).click();
+  await expect(uuid.locator(".codeOut")).toContainText(/[0-9a-f]{8}-[0-9a-f]{4}-/);
+});
+
+test("Quick: QR code generates a downloadable PNG", async ({ page }) => {
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Quick Tools");
+  const qr = toolCard(page, "qr");
+  // Default content is preset; just hit the button
+  await expectDownload(page, () => qr.getByRole("button", { name: /download png/i }).click(), ".png");
+});
+
+// ============================================================ Business Docs
+
+test("Business Docs: receipt downloads a PDF", async ({ page }) => {
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Business Docs");
+  const receipt = toolCard(page, "receipt");
+  await receipt.locator('input[placeholder="Item"]').first().fill("Service");
+  await expectDownload(page, () => receipt.getByRole("button", { name: /download receipt/i }).click(), ".pdf");
+});
+
+test("Business Docs: resume downloads a PDF", async ({ page }) => {
+  await gotoPanel(page, "Tools");
+  await gotoCategory(page, "Business Docs");
+  const resume = toolCard(page, "resume");
+  await resume.getByRole("textbox", { name: "Full name" }).fill("Smoke User");
+  await expectDownload(page, () => resume.getByRole("button", { name: /download resume pdf/i }).click(), ".pdf");
+});
+
 // ============================================================ Editor
 
 test("Editor: loads a PDF, drops text, and exports an edited PDF", async ({ page }) => {

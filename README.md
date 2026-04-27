@@ -4,9 +4,9 @@
 https://doc-tool.netlify.app/
 ```
 
-A free, professional PDF studio that runs entirely in your browser. No accounts, no uploads, no paywall.
+A free, professional document and developer studio that runs entirely in your browser. No accounts, no uploads, no paywall.
 
-JC PDF Studio gives anyone — freelancers, small businesses, legal teams, non-profits — the kind of PDF tooling that normally lives behind a subscription, with a workflow that respects privacy: every file stays on your device.
+JC PDF Studio gives anyone — freelancers, small businesses, legal teams, non-profits, designers, and developers — the kind of tooling that normally lives behind a stack of subscriptions, with a workflow that respects privacy: every file stays on your device.
 
 ## What's inside
 
@@ -53,6 +53,46 @@ JC PDF Studio is organized like the tools professionals already know. Use the se
 - **Search & highlight report** — find a term and download a snippet PDF
 - **OCR (Tesseract.js)** — recognize text in scanned PDFs and add an invisible searchable layer
 
+### Tools — Images & Media
+
+- **Compress image** — JPG/PNG re-encode with a quality slider
+- **Convert image format** — PNG ↔ JPG ↔ WebP
+- **Resize image** — exact pixels with optional aspect-ratio lock
+- **Favicon generator** — full PNG size set in a single zip, plus a paste-in HTML snippet
+
+### Tools — Text & Data
+
+- **JSON formatter / validator / minifier** — with helpful error reporting
+- **CSV ↔ JSON** — round-trip a spreadsheet to structured JSON and back
+- **Base64 encode / decode** — text or any file
+- **URL encode / decode** — for query strings and links
+- **Hash generator** — SHA-1, SHA-256, SHA-384, SHA-512 from text or file (Web Crypto)
+- **JWT decoder** — header and payload (signature is not verified)
+- **Markdown → HTML / PDF** — live preview, then download
+
+### Tools — Quick Tools
+
+- **Password generator** — cryptographically random with full character-class control
+- **UUID generator** — RFC-4122 v4
+- **Lorem ipsum generator** — paragraphs, sentences, or words
+- **QR code generator** — text or URL → PNG or SVG, fully customizable colors
+- **Color palette** — tints, shades, and complement from a base color, click to copy
+- **Word & character count** — live stats including reading time
+- **Case converter** — camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, dot.case, Title Case, Sentence case
+- **Slug generator** — URL-safe slugs from any title
+- **Regex tester** — live match count and highlighted hits
+- **Text diff checker** — line-by-line comparison
+
+### Tools — Business Docs
+
+- **Receipt generator** — itemized totals + payment method
+- **Quote / estimate** — branded with scope, validity date, and terms
+- **Resume / CV builder** — clean one-page ATS-friendly PDF
+- **Meeting agenda** — attendees and timed topics
+- **Business card sheet** — 10-up 3.5 by 2 inch cards on a single Letter page
+- **Formal letter** — block-format letter with letterhead, salutation, sign-off
+- **Checklist / SOP** — numbered checkable list as a printable PDF
+
 ### Builder (design from scratch)
 
 A block-based PDF designer with cover pages, headers/footers, two-column body, signature blocks, callouts, checklists, dividers, and image embeds. Reads your brand defaults automatically.
@@ -72,7 +112,10 @@ Most PDF tools either cost a subscription, push you to upload your documents to 
 - [pdfjs-dist](https://mozilla.github.io/pdf.js/) for rendering and text extraction
 - [tesseract.js](https://tesseract.projectnaptha.com/) for in-browser OCR
 - [docx](https://docx.js.org/) for Word export
-- [jszip](https://stuk.github.io/jszip/) for PNG-zip export
+- [jszip](https://stuk.github.io/jszip/) for zip exports (favicons, PNG-per-page)
+- [qrcode](https://www.npmjs.com/package/qrcode) for QR PNG/SVG generation
+- [marked](https://marked.js.org/) for Markdown rendering
+- Web Crypto API for SHA hashing
 - [lucide-react](https://lucide.dev/) for icons
 - Hand-written CSS with CSS variables and animated SVG accents
 - Playwright smoke tests
@@ -110,8 +153,11 @@ src/
   App.jsx        — shell, command palette, brand page, layout
   editor.jsx     — in-place PDF editor (text/highlight/draw/sign/image/whiteout)
   builder.jsx    — block-based PDF designer
-  tools.jsx      — categorized tools (Organize / Convert / Generate / Protect / Read)
-  lib.jsx        — helpers, brand store, animated SVGs, signature pad, palette, etc.
+  tools.jsx      — PDF tool cards (Organize / Convert / Generate / Protect / Read);
+                   also aggregates utilities into the same panel via the registry
+  utilities.jsx  — non-PDF tool cards (Images & Media / Text & Data / Quick Tools / Business Docs)
+  lib.jsx        — helpers, brand store, animated SVGs, signature pad, palette,
+                   shared ToolHeader + withWorking wrapper, full Legal panel
   styles.css     — design system + animations
   main.jsx       — React entry
 ```
@@ -126,7 +172,8 @@ src/
 ## Launch checklist
 
 1. Replace `public/logo.svg` with your final mark if you're white-labeling the project.
-2. Add your real Terms of Use / Privacy Policy text to `LegalPanel` in `src/lib.jsx`.
-3. Decide whether you want analytics. If privacy is the selling point, keep them off or make them clearly disclosed and consent-based.
-4. Test with PDFs from desktop, iPad/tablet, iPhone/Android, Chrome, Edge, Firefox, and Safari.
+2. Review the comprehensive `LegalPanel` in `src/lib.jsx` — Privacy Policy, Terms of Use, AdSense disclosure, and tool-specific notes are already included; tweak the contact section to match how you want to be reached.
+3. If you're adding Google AdSense, the privacy policy already discloses it; just paste the AdSense `<script>` into `index.html` and add an `ads.txt` to `public/` per AdSense's instructions.
+4. Decide whether you want analytics. If privacy is the selling point, keep them off or make them clearly disclosed and consent-based.
+5. Test with PDFs and utilities from desktop, iPad/tablet, iPhone/Android, Chrome, Edge, Firefox, and Safari.
 5. Run `npm run test:smoke` to verify every tool downloads.

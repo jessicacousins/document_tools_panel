@@ -14,8 +14,10 @@
     "docx": "^9.6.1",
     "jszip": "^3.10.1",
     "lucide-react": "latest",
+    "marked": "^18.0.2",
     "pdf-lib": "latest",
     "pdfjs-dist": "latest",
+    "qrcode": "^1.5.4",
     "react": "latest",
     "react-dom": "latest",
     "tesseract.js": "^7.0.0"

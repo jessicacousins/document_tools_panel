@@ -11,6 +11,33 @@ import {
   X,
 } from "lucide-react";
 
+// ============================================================ Tool helpers (shared across panels)
+
+export function withWorking(action, setLocal, setStatus) {
+  return async () => {
+    setLocal?.(true);
+    try {
+      await action();
+    } catch (error) {
+      setStatus?.(error?.message || "Something went wrong.", "error");
+    } finally {
+      setLocal?.(false);
+    }
+  };
+}
+
+export function ToolHeader({ icon: Icon, title, description }) {
+  return (
+    <div className="cardHead">
+      <div className="cardIcon">{Icon ? <Icon size={18} /> : null}</div>
+      <div className="cardTitle">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+    </div>
+  );
+}
+
 // ============================================================ Pure helpers
 
 export const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -537,37 +564,214 @@ export function EmptyState({ onPick, onOpenTools }) {
 
 export function LegalPanel() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div className="legalPanel">
       <section className="controlCard">
         <div className="sectionTitle">
-          <ShieldCheck size={16} /> Privacy model
+          <ShieldCheck size={16} /> Privacy Policy
         </div>
         <p className="miniText">
-          JC PDF Studio processes your files entirely in your browser. There is
-          no upload endpoint, no account system, and no analytics in this build.
-          Your PDF stays in tab memory until you close it; the edited copy is
-          delivered as a normal browser download.
+          <strong>Effective date:</strong> the date you load the site. This
+          policy is reviewed periodically.
+        </p>
+        <p className="miniText">
+          JC PDF Studio (the &quot;Service&quot;) is a static website. Every
+          tool runs entirely in your browser. We do not operate any server-side
+          file processing. We never receive, store, log, or transmit the
+          documents, images, text, or any other content you load into the
+          tools. There is no upload endpoint, no document database, and no
+          account system.
+        </p>
+        <h4>1. Information we do not collect</h4>
+        <p className="miniText">
+          We do not collect names, email addresses, phone numbers, IP-derived
+          identifiers, geolocation data, billing data, document contents,
+          filenames, file metadata, or any account credentials. There is
+          nothing to log into and nothing to subscribe to.
+        </p>
+        <h4>2. Information stored locally on your device</h4>
+        <p className="miniText">
+          The Brand page lets you save a company name, logo image, colors,
+          and signature drawings. These items are written to your browser&apos;s
+          <code> localStorage </code> under a single key
+          (<code>JC PDF Studio.brand.v1</code>) and never leave your device.
+          You can clear them at any time from the Brand page or by clearing
+          your browser site data.
+        </p>
+        <h4>3. Hosting, CDN, and standard server logs</h4>
+        <p className="miniText">
+          The site is hosted as static files on Netlify. Like every web host,
+          Netlify maintains routine, short-lived request logs (IP address,
+          user agent, requested URL, timestamp) for security and abuse
+          prevention. We do not query, export, or attach identity to those
+          logs. We do not place any analytics, tag managers, or fingerprinting
+          scripts in the page.
+        </p>
+        <h4>4. Advertising</h4>
+        <p className="miniText">
+          The Service may display third-party advertising (such as Google
+          AdSense) to fund free hosting. When ads are enabled, the ad provider
+          may set or read cookies and process limited request data (IP, user
+          agent, page URL) to serve and measure ads, including potentially
+          personalized ads, in accordance with their own policies. You can
+          opt out of personalized advertising at
+          {" "}<a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>{" "}
+          and manage other vendors at
+          {" "}<a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">aboutads.info</a>{" "}
+          or
+          {" "}<a href="https://www.youronlinechoices.com" target="_blank" rel="noopener noreferrer">youronlinechoices.com</a>.
+          Even when ads are present, your document content is still processed
+          only in your browser and is not shared with the ad provider.
+        </p>
+        <h4>5. Cookies</h4>
+        <p className="miniText">
+          The Service itself does not set any first-party tracking cookies. It
+          uses <code>localStorage</code> only for the optional Brand identity
+          described in section 2. If advertising is enabled, the ad provider
+          may set its own cookies as described in section 4.
+        </p>
+        <h4>6. Children&apos;s privacy</h4>
+        <p className="miniText">
+          The Service is not directed at children under 13 and we do not
+          knowingly collect information from them. Because the Service does
+          not collect personal information at all, this is straightforward.
+        </p>
+        <h4>7. Your rights (GDPR / CCPA)</h4>
+        <p className="miniText">
+          Because we do not collect or store your personal information on our
+          servers, there is nothing held about you that you would need to
+          access, correct, or have deleted. For the locally-stored Brand
+          identity in section 2, you can view and delete it yourself at any
+          time from the Brand page. Standard host/CDN logs are not associated
+          with identity by us.
+        </p>
+        <h4>8. Changes</h4>
+        <p className="miniText">
+          We may update this policy as the Service evolves. Material changes
+          will be reflected in the modal you are reading right now.
         </p>
       </section>
+
       <section className="controlCard">
         <div className="sectionTitle">
-          <PenLine size={16} /> Whiteout vs redaction
+          <CheckCircle2 size={16} /> Terms of Use
         </div>
         <p className="miniText">
-          The Whiteout tool covers content visually but does not destroy the
-          underlying text. For legal, medical, or compliance redaction use the
-          dedicated <strong>Redact</strong> tool which rasterizes pages and
-          burns the redaction in.
+          By using the Service you agree to the following terms. If you do not
+          agree, please stop using the Service.
+        </p>
+        <h4>1. The Service is provided &quot;as is&quot;</h4>
+        <p className="miniText">
+          The tools are offered free of charge, without warranty of any kind,
+          express or implied, including merchantability, fitness for a
+          particular purpose, accuracy, and non-infringement. You use the
+          Service at your own risk and remain solely responsible for
+          validating that any output meets your requirements before relying
+          on it.
+        </p>
+        <h4>2. Limitation of liability</h4>
+        <p className="miniText">
+          To the maximum extent permitted by law, the operator of the Service
+          will not be liable for any indirect, incidental, special,
+          consequential, or punitive damages, or any loss of data, profits,
+          revenue, or goodwill, arising from your use of the Service —
+          including, without limitation, mistakes in document conversion,
+          incorrect calculations, signatures placed in error, missed
+          redactions, or output that is rejected by a downstream system.
+        </p>
+        <h4>3. You are responsible for what you process</h4>
+        <p className="miniText">
+          You confirm that you have the legal right to load, edit, and
+          generate the documents you process with the Service, and that doing
+          so does not violate any applicable law, contract, court order, or
+          third-party right (including copyright, trademark, privacy,
+          confidentiality, export control, or sanctions). The Service
+          operator does not see and cannot moderate your inputs.
+        </p>
+        <h4>4. Acceptable use</h4>
+        <p className="miniText">
+          Do not use the Service to create or distribute material that is
+          illegal in your jurisdiction, that defrauds another person, that
+          impersonates a government or business, that infringes intellectual
+          property, or that produces falsified records of any kind. The
+          Whiteout tool covers content visually only — for legally-required
+          redaction (HIPAA, eDiscovery, FOIA, GDPR responses), use the
+          dedicated <strong>Redact</strong> tool, which rasterizes pages so
+          covered text is unrecoverable.
+        </p>
+        <h4>5. Not legal, financial, or medical advice</h4>
+        <p className="miniText">
+          Document templates (invoices, quotes, receipts, agreements,
+          letters, etc.) are starting points, not legal or financial advice.
+          Have a qualified professional review anything that creates legal
+          rights or obligations.
+        </p>
+        <h4>6. Third-party content</h4>
+        <p className="miniText">
+          The Service uses open-source libraries to render and write PDFs,
+          run OCR, and produce DOCX files. Those libraries are governed by
+          their own licenses. The Service may also display third-party
+          advertising governed by the ad provider&apos;s policies.
+        </p>
+        <h4>7. Changes to the Service</h4>
+        <p className="miniText">
+          The Service may add, modify, or remove tools at any time without
+          notice. There is no service-level commitment.
+        </p>
+        <h4>8. Governing law</h4>
+        <p className="miniText">
+          These terms are governed by the laws of the United States and the
+          state in which the operator resides, without regard to
+          conflict-of-law principles. Disputes shall be resolved in the
+          courts located there.
         </p>
       </section>
+
       <section className="controlCard">
         <div className="sectionTitle">
-          <CheckCircle2 size={16} /> Brand identity
+          <PenLine size={16} /> Important tool-specific notes
+        </div>
+        <h4>Whiteout vs Redaction</h4>
+        <p className="miniText">
+          The Whiteout tool in the Editor covers content visually but does
+          not destroy the underlying text. Anyone with the file can copy
+          text from beneath a whiteout box. For legal, medical, financial,
+          or compliance redaction use the dedicated{" "}
+          <strong>Tools → Redact</strong> tool, which rasterizes the affected
+          pages and burns the redaction in. Always re-open the redacted
+          output and try to copy-and-paste from the redacted area to confirm
+          the text is gone before you distribute it.
+        </p>
+        <h4>OCR accuracy</h4>
+        <p className="miniText">
+          OCR runs locally with Tesseract.js. Accuracy depends heavily on
+          scan quality, language, font, and resolution. Always proofread
+          OCR output before relying on it for anything important.
+        </p>
+        <h4>Compress tool</h4>
+        <p className="miniText">
+          The Compress tool re-saves the PDF using object streams. Real
+          shrinkage depends on what is already optimized in the source. If
+          your PDF is dominated by raster images that are already
+          well-compressed, the output may be similar in size.
+        </p>
+        <h4>Brand identity storage</h4>
+        <p className="miniText">
+          Your saved logo, colors, and signatures live only in this browser
+          via <code>localStorage</code>. Different browsers and different
+          devices have separate copies. Use the <strong>Brand</strong> page
+          to manage them. Clear them any time from the same page.
+        </p>
+      </section>
+
+      <section className="controlCard">
+        <div className="sectionTitle">
+          <ShieldCheck size={16} /> Contact
         </div>
         <p className="miniText">
-          Your saved logo, colors, and signatures live only in this browser via
-          localStorage. Use the <strong>Brand</strong> page to manage them.
-          Clear them any time from the same page.
+          Privacy or legal questions about this Service can be sent to the
+          email address listed on the public site. If no contact email is
+          listed, the Service is being used as a free public utility and
+          there is no support channel beyond the source repository.
         </p>
       </section>
     </div>
