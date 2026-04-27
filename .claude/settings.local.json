@@ -12,7 +12,8 @@
       "Bash(npx playwright *)",
       "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --grep \"App boots|Command palette|Brand page|Organize: merge|Generate: invoice|Builder|Editor: loads\" --reporter=line --workers=1)",
       "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --grep \"Images:|Text & Data|Quick:|Business Docs:\" --reporter=line --workers=1)",
-      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --reporter=line --workers=1)"
+      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --reporter=line --workers=1)",
+      "Bash(PW_CHANNEL=chrome npx playwright test smoke.spec.js --grep \"App boots|Brand page\" --reporter=line --workers=1)"
     ]
   }
 }

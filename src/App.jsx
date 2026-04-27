@@ -2,15 +2,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import {
+  ExternalLink,
   FileEdit,
   FilePlus2,
+  Globe,
   Layers3,
+  Mail,
   Palette,
   PenLine,
+  ScrollText,
   Search,
+  ShieldAlert,
   Sparkles,
   Trash2,
   UploadCloud,
+  UserCircle2,
   X,
 } from "lucide-react";
 import {
@@ -33,6 +39,7 @@ const NAV = [
   { id: "tools", label: "Tools", icon: Layers3 },
   { id: "builder", label: "Builder", icon: FilePlus2 },
   { id: "brand", label: "Brand", icon: Palette },
+  { id: "contact", label: "Contact", icon: UserCircle2 },
 ];
 
 export default function App() {
@@ -241,6 +248,13 @@ export default function App() {
             Privacy details
           </button>
         </span>
+        <span className="ribbonSpacer" />
+        <button
+          className="ribbonAttribution"
+          onClick={() => setActivePanel("contact")}
+        >
+          Built by <strong>Jessica Cousins</strong>
+        </button>
       </div>
 
       {/* Main content */}
@@ -278,6 +292,10 @@ export default function App() {
 
       {activePanel === "brand" && (
         <BrandPage brandStore={brandStore} setStatus={showStatus} />
+      )}
+
+      {activePanel === "contact" && (
+        <ContactPage onOpenLegal={() => setLegalOpen(true)} />
       )}
 
       {/* Palette + modals */}
@@ -603,6 +621,222 @@ function BrandPage({ brandStore, setStatus }) {
           </button>
         </section>
       </div>
+    </main>
+  );
+}
+
+// ============================================================ Contact page
+
+function ContactPage({ onOpenLegal }) {
+  return (
+    <main className="contactPage">
+      <header className="contactHero">
+        <div className="contactHeroInner">
+          <p className="eyebrow">Contact &amp; About the Developer</p>
+          <h1>Built and maintained by Jessica Cousins</h1>
+          <p className="contactLede">
+            JC PDF Studio is an independent project — designed, built, and
+            shipped by one developer. The fastest way to get in touch, see other
+            work, or hire me for a project is through my portfolio.
+          </p>
+          <div className="contactCtaRow">
+            <a
+              className="btn btn-brand btn-lg"
+              href="https://jessicacousins.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Globe size={16} /> Visit jessicacousins.tech
+              <ExternalLink size={14} style={{ opacity: 0.85 }} />
+            </a>
+            <a
+              className="btn btn-ghost btn-lg"
+              href="https://jessicacousins.tech#contact"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Mail size={16} /> Send a message
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <div className="contactGrid">
+        <section className="card elevated">
+          <div className="cardHead">
+            <div className="cardIcon">
+              <UserCircle2 size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>About this project</h3>
+              <p>Why JC PDF Studio exists, and what to expect from it.</p>
+            </div>
+          </div>
+          <p className="contactBody">
+            JC PDF Studio is a free, browser-local document and developer
+            studio. Every tool runs entirely in your browser. There is no
+            sign-up, no upload endpoint, and no account system. The project is
+            offered as a free public utility because the equivalent commercial
+            tools usually live behind a stack of subscriptions.
+          </p>
+          <p className="contactBody">
+            If a tool here saves you time, that&apos;s the point. If you have an
+            idea for a tool that should be added, please reach out via the
+            portfolio site — feedback shapes what gets built next.
+          </p>
+        </section>
+
+        <section className="card elevated">
+          <div className="cardHead">
+            <div className="cardIcon purple">
+              <Globe size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>How to reach me</h3>
+              <p>Direct contact runs through my portfolio site.</p>
+            </div>
+          </div>
+          <ul className="contactLinkList">
+            <li>
+              <Globe size={15} />
+              <div>
+                <strong>Portfolio &amp; primary contact</strong>
+                <a
+                  href="https://jessicacousins.tech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  jessicacousins.tech <ExternalLink size={12} />
+                </a>
+              </div>
+            </li>
+            <li>
+              <Mail size={15} />
+              <div>
+                <strong>Inquiries &amp; feedback</strong>
+                <a
+                  href="https://jessicacousins.tech#contact"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Use the contact form on the portfolio
+                </a>
+              </div>
+            </li>
+          </ul>
+          <p className="miniText">
+            All correspondence is handled through the portfolio site so it stays
+            in one place and gets a real reply. There is no support ticket
+            system on this site.
+          </p>
+        </section>
+
+        <section className="card elevated contactDisclaimer">
+          <div className="cardHead">
+            <div
+              className="cardIcon"
+              style={{
+                background: "rgba(244, 63, 94, 0.1)",
+                color: "var(--rose)",
+              }}
+            >
+              <ShieldAlert size={18} />
+            </div>
+            <div className="cardTitle">
+              <h3>Important disclaimer — please read</h3>
+              <p>
+                Use of JC PDF Studio is at your own risk. Read this section in
+                full before relying on any output from this site.
+              </p>
+            </div>
+          </div>
+          <ol className="contactLegalList">
+            <li>
+              <strong>Provided &quot;as is.&quot;</strong> JC PDF Studio is a
+              free public utility offered without warranty of any kind, express
+              or implied — including merchantability, fitness for a particular
+              purpose, accuracy, security, or non-infringement. Tools may
+              produce incorrect output, miss edge cases, or fail entirely. You
+              are responsible for inspecting every result before using it.
+            </li>
+            <li>
+              <strong>No liability for outcomes.</strong> The developer of this
+              site, accepts no responsibility for any loss, damage, claim, harm,
+              business interruption, lost data, missed deadlines, regulatory
+              penalty, or other negative outcome arising from your use of these
+              tools — including mistakes in document conversion, signatures
+              placed in error, redactions that fail to remove sensitive content,
+              calculation errors, or generated documents that are rejected by a
+              downstream system.
+            </li>
+            <li>
+              <strong>Not professional advice.</strong> Document templates
+              (invoices, quotes, receipts, agreements, letters, resumes,
+              business cards, etc.) are starting points, not legal, financial,
+              medical, or tax advice. Have a qualified professional review
+              anything that creates legal rights or obligations or that involves
+              money, health, or compliance.
+            </li>
+            <li>
+              <strong>Safety-critical or regulated workflows.</strong> Do not
+              use this site for safety-critical, life-critical, or high-stakes
+              regulated work without independent verification. That includes
+              medical records, legal filings, court evidence, security-sensitive
+              material, financial reporting, and anything subject to HIPAA,
+              GDPR, FERPA, SOX, PCI-DSS, ITAR, or similar regimes. The Whiteout
+              tool covers content visually only — for legally-required
+              redaction, use the dedicated
+              <strong> Tools → Redact</strong> tool, then re-open the output and
+              verify the text is unrecoverable.
+            </li>
+            <li>
+              <strong>Your content is your responsibility.</strong> You confirm
+              that you have the legal right to load, edit, and generate the
+              documents you process here, and that doing so does not violate any
+              law, contract, court order, or third-party right. The developer
+              does not see, store, or moderate your inputs.
+            </li>
+            <li>
+              <strong>No SLA, no guarantee of availability.</strong> The site
+              may add, modify, remove, or take down tools at any time without
+              notice. There is no service-level commitment.
+            </li>
+          </ol>
+          <p className="contactBody" style={{ marginTop: 12 }}>
+            By continuing to use JC PDF Studio, you acknowledge and accept all
+            of the above. The full Privacy Policy and Terms of Use are available
+            in one click below.
+          </p>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button className="btn btn-soft" onClick={onOpenLegal}>
+              <ScrollText size={14} /> Read full Privacy &amp; Terms
+            </button>
+            <a
+              className="btn btn-ghost"
+              href="https://jessicacousins.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Globe size={14} /> jessicacousins.tech
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <footer className="contactFooter">
+        <span>
+          &copy; {new Date().getFullYear()} Jessica Cousins. JC PDF Studio is an
+          independent project — all trademarks belong to their respective
+          owners.
+        </span>
+        <a
+          href="https://jessicacousins.tech"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          jessicacousins.tech <ExternalLink size={11} />
+        </a>
+      </footer>
     </main>
   );
 }

@@ -1469,6 +1469,167 @@ input:focus, textarea:focus, select:focus, .searchTrigger:focus-visible {
   50% { transform: translate(40px, 30px); }
 }
 
+/* ============================================================ Contact page */
+
+.contactPage {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+  padding: 0 0 32px;
+}
+
+.contactHero {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(20, 184, 166, 0.18) 0%, transparent 60%),
+    radial-gradient(circle at 80% 100%, rgba(124, 58, 237, 0.18) 0%, transparent 55%),
+    var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 56px 28px 48px;
+}
+.contactHeroInner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.contactHero h1 {
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.contactLede {
+  color: var(--ink-soft);
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.contactCtaRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.contactCtaRow a {
+  text-decoration: none;
+}
+
+.contactGrid {
+  max-width: 920px;
+  margin: 28px auto 0;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.contactGrid .contactDisclaimer { grid-column: 1 / -1; }
+@media (max-width: 768px) { .contactGrid { grid-template-columns: 1fr; } }
+
+.contactBody {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.contactLinkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.contactLinkList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: var(--transition);
+}
+.contactLinkList li:hover {
+  border-color: var(--teal-bright);
+  background: var(--panel);
+}
+.contactLinkList li svg {
+  color: var(--teal);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.contactLinkList li > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.contactLinkList li strong {
+  font-size: 0.82rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+.contactLinkList li a {
+  font-size: 0.86rem;
+  color: var(--teal);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  word-break: break-all;
+}
+
+.contactLegalList {
+  margin: 4px 0 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.contactLegalList li::marker { color: var(--rose); font-weight: 700; }
+.contactLegalList li strong { color: var(--ink); }
+
+.contactFooter {
+  max-width: 920px;
+  margin: 32px auto 0;
+  padding: 18px 28px 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.contactFooter a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.ribbonSpacer { flex: 1; }
+.ribbonAttribution {
+  font-size: 0.76rem;
+  color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+.ribbonAttribution strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.ribbonAttribution:hover {
+  background: var(--panel);
+  color: var(--ink);
+}
+
 /* ============================================================ Utility tool styles */
 
 .splitArea {
